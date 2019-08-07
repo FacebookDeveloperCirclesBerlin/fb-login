@@ -1,0 +1,73 @@
+Facebook documentation: https://developers.facebook.com/docs/facebook-login/web
+
+
+-- Facebook SDK
+(function(d, s, id){
+var js, fjs = d.getElementsByTagName(s)[0];
+if (d.getElementById(id)) {return;}
+js = d.createElement(s); js.id = id;
+js.src = "https://connect.facebook.net/en_US/sdk.js";
+fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+-- Init app
+window.fbAsyncInit = function() {
+FB.init({
+appId      : 'XXXXXX',
+cookie     : true,
+xfbml      : true,
+version    : 'v2.2'
+});
+};
+
+
+-- Check user status
+
+function checkLoginState() {
+  FB.getLoginStatus(function(response) {
+    if (response.status === 'connected') {
+      console.log(response);
+      var accessToken = response.authResponse.accessToken;
+      //insert access token in cookie
+      document.cookie = "token=" + accessToken;
+      window.location.href = 'XXXXXXXX';
+    } else {
+      console.log(response);
+      alert(':(');
+    }
+  });
+}
+
+-- FB login version 1
+<fb:login-button
+scope="public_profile,email"
+onlogin="checkLoginState();">
+</fb:login-button>
+
+-- FB login version 2
+
+<div class="fb-login-button"
+data-width=""
+data-size="large"
+data-button-type="continue_with"
+data-auto-logout-link="false"
+data-use-continue-as="false"
+onlogin="checkLoginState();"></div>
+
+-- Function getCookie
+
+function getCookie(cname) {
+var name = cname + "=";
+var decodedCookie = decodeURIComponent(document.cookie);
+var ca = decodedCookie.split(';');
+for(var i = 0; i <ca.length; i++) {
+var c = ca[i];
+while (c.charAt(0) == ' ') {
+  c = c.substring(1);
+}
+if (c.indexOf(name) == 0) {
+  return c.substring(name.length, c.length);
+}
+}
+return "";
+}
